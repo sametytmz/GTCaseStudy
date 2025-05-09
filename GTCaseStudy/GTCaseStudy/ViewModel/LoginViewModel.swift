@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class LoginViewModel {
     // MARK: - Properties
@@ -37,6 +38,10 @@ final class LoginViewModel {
                 switch result {
                 case .success(let response):
                     self?.cache.set(object: response.token, forKey: "token")
+                    // Ana ekrana geçiş
+                    if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate, let window = sceneDelegate.window {
+                        window.rootViewController = MainTabBarController()
+                    }
                     self?.onLoginSuccess?()
                 case .failure(let error):
                     self?.onLoginError?(error.localizedDescription)
