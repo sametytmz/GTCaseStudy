@@ -17,4 +17,10 @@ extension UIViewController {
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default))
         present(alert, animated: true)
     }
+    
+    func showAlert(title: String, message: String, buttonTitle: String = NSLocalizedString("OK", comment: "")) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: buttonTitle, style: .default))
+        present(alert, animated: true)
+    }
 } 
