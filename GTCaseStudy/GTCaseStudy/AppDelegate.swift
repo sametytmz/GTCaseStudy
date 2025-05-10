@@ -6,15 +6,26 @@
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseAnalytics
+import FirebaseCrashlytics
+import FirebaseRemoteConfig
+import FirebaseMessaging
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        FirebaseApp.configure()
+        UNUserNotificationCenter.current().delegate = self
+        application.registerForRemoteNotifications()
+        Messaging.messaging().delegate = self
         return true
+    }
+
+    // MARK: Push Notification Delegate
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
     }
 
     // MARK: UISceneSession Lifecycle

@@ -7,7 +7,14 @@
 
 import UIKit
 
+// LoginCoordinator protokolü
+protocol LoginCoordinator: AnyObject {
+    func showMainTabBar()
+}
+
 class LoginViewController: UIViewController {
+    // MARK: - Coordinator
+    weak var coordinator: LoginCoordinator?
     // MARK: - UI
     private let containerView: UIView = {
         let v = UIView()
@@ -21,27 +28,14 @@ class LoginViewController: UIViewController {
         return v
     }()
     private let titleLabel: UILabel = {
-        let l = UILabel()
+        let l = UILabel.appLabel(font: .appHeadline(), textColor: .appBlue, numberOfLines: 2)
         l.text = NSLocalizedString("Garanti BBVA\nCase Study", comment: "")
-        l.font = .appHeadline()
-        l.textColor = .appBlue
-        l.numberOfLines = 2
         l.textAlignment = .center
-        l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
     private let emailField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = NSLocalizedString("E-mail address", comment: "")
-        tf.font = .appSubheading()
-        tf.autocapitalizationType = .none
+        let tf = UITextField.appTextField(placeholder: NSLocalizedString("E-mail address", comment: ""), font: .appSubheading(), isSecure: false, icon: UIImage(named: "emailIcon"))
         tf.keyboardType = .emailAddress
-        let icon = UIImageView(image: UIImage(named: "emailIcon"))
-        icon.contentMode = .scaleAspectFit
-        icon.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-        tf.rightView = icon
-        tf.rightViewMode = .always
-        tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
     private let emailUnderline: UIView = {
@@ -51,16 +45,7 @@ class LoginViewController: UIViewController {
         return v
     }()
     private let passwordField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = NSLocalizedString("Password", comment: "")
-        tf.font = .appSubheading()
-        tf.isSecureTextEntry = true
-        let icon = UIImageView(image: UIImage(named: "lockIcon"))
-        icon.contentMode = .scaleAspectFit
-        icon.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-        tf.rightView = icon
-        tf.rightViewMode = .always
-        tf.translatesAutoresizingMaskIntoConstraints = false
+        let tf = UITextField.appTextField(placeholder: NSLocalizedString("Password", comment: ""), font: .appSubheading(), isSecure: true, icon: UIImage(named: "lockIcon"))
         return tf
     }()
     private let passwordUnderline: UIView = {
@@ -70,25 +55,13 @@ class LoginViewController: UIViewController {
         return v
     }()
     private let loginButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.setTitle(NSLocalizedString("LOGIN", comment: ""), for: .normal)
-        b.titleLabel?.font = .appButton()
-        b.setTitleColor(.white, for: .normal)
-        b.layer.cornerRadius = 12
-        b.clipsToBounds = true
-        b.translatesAutoresizingMaskIntoConstraints = false
-        b.backgroundColor = .appGreen
+        let b = UIButton.appButton(title: NSLocalizedString("LOGIN", comment: ""), font: .appButton())
         return b
     }()
     private let forgotButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.setTitle(NSLocalizedString("I FORGOT MY PASS", comment: ""), for: .normal)
-        b.titleLabel?.font = .appCapsXS()
-        b.setTitleColor(.appDark, for: .normal)
-        b.layer.cornerRadius = 8
+        let b = UIButton.appButton(title: NSLocalizedString("I FORGOT MY PASS", comment: ""), font: .appCapsXS(), titleColor: .appDark, bgColor: .clear, cornerRadius: 8)
         b.layer.borderWidth = 1
         b.layer.borderColor = UIColor.appBlue.cgColor
-        b.translatesAutoresizingMaskIntoConstraints = false
         b.contentEdgeInsets = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
         b.heightAnchor.constraint(equalToConstant: 28).isActive = true
         return b
@@ -124,62 +97,79 @@ class LoginViewController: UIViewController {
     }
     private func setupUI() {
         view.addSubview(containerView)
-        containerView.addSubview(titleLabel)
-        containerView.addSubview(emailField)
-        containerView.addSubview(emailUnderline)
-        containerView.addSubview(passwordField)
-        containerView.addSubview(passwordUnderline)
-        containerView.addSubview(loginButton)
-        containerView.addSubview(forgotButton)
-        containerView.addSubview(facebookImageView)
-        containerView.addSubview(twitterImageView)
-        // Layout
-        NSLayoutConstraint.activate([
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 600),
-            // Title
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 48),
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
-            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
-            // Email
-            emailField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 48),
-            emailField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
-            emailField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
-            emailField.heightAnchor.constraint(equalToConstant: 44),
-            emailUnderline.topAnchor.constraint(equalTo: emailField.bottomAnchor),
-            emailUnderline.leadingAnchor.constraint(equalTo: emailField.leadingAnchor),
-            emailUnderline.trailingAnchor.constraint(equalTo: emailField.trailingAnchor),
-            emailUnderline.heightAnchor.constraint(equalToConstant: 2),
-            // Password
-            passwordField.topAnchor.constraint(equalTo: emailUnderline.bottomAnchor, constant: 24),
-            passwordField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
-            passwordField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
-            passwordField.heightAnchor.constraint(equalToConstant: 44),
-            passwordUnderline.topAnchor.constraint(equalTo: passwordField.bottomAnchor),
-            passwordUnderline.leadingAnchor.constraint(equalTo: passwordField.leadingAnchor),
-            passwordUnderline.trailingAnchor.constraint(equalTo: passwordField.trailingAnchor),
-            passwordUnderline.heightAnchor.constraint(equalToConstant: 2),
-            // Login Button
-            loginButton.topAnchor.constraint(equalTo: passwordUnderline.bottomAnchor, constant: 80),
-            loginButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
-            loginButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
-            loginButton.heightAnchor.constraint(equalToConstant: 48),
-            // Forgot
-            forgotButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 16),
-            forgotButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            forgotButton.heightAnchor.constraint(equalToConstant: 28),
-            // Facebook ve Twitter
-            facebookImageView.topAnchor.constraint(equalTo: forgotButton.bottomAnchor, constant: 24),
-            facebookImageView.trailingAnchor.constraint(equalTo: containerView.centerXAnchor, constant: -8),
-            facebookImageView.heightAnchor.constraint(equalToConstant: 40),
-            facebookImageView.widthAnchor.constraint(equalToConstant: 140),
-            twitterImageView.topAnchor.constraint(equalTo: forgotButton.bottomAnchor, constant: 24),
-            twitterImageView.leadingAnchor.constraint(equalTo: containerView.centerXAnchor, constant: 8),
-            twitterImageView.heightAnchor.constraint(equalToConstant: 40),
-            twitterImageView.widthAnchor.constraint(equalToConstant: 140)
-        ])
+        containerView.addSubviews(
+            titleLabel,
+            emailField,
+            emailUnderline,
+            passwordField,
+            passwordUnderline,
+            loginButton,
+            forgotButton,
+            facebookImageView,
+            twitterImageView
+        )
+        containerView.anchor(
+            leading: view.leadingAnchor, trailing: view.trailingAnchor, centerY: view.centerYAnchor,
+            padding: UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24),
+            size: CGSize(width: 0, height: 600)
+        )
+        titleLabel.anchor(
+            top: containerView.topAnchor,
+            leading: containerView.leadingAnchor,
+            trailing: containerView.trailingAnchor,
+            padding: UIEdgeInsets(top: 48, left: 24, bottom: 0, right: 24)
+        )
+        emailField.anchor(
+            top: titleLabel.bottomAnchor,
+            leading: containerView.leadingAnchor,
+            trailing: containerView.trailingAnchor,
+            padding: UIEdgeInsets(top: 48, left: 24, bottom: 0, right: 24),
+            size: CGSize(width: 0, height: 44)
+        )
+        emailUnderline.anchor(
+            top: emailField.bottomAnchor,
+            leading: emailField.leadingAnchor,
+            trailing: emailField.trailingAnchor,
+            size: CGSize(width: 0, height: 2)
+        )
+        passwordField.anchor(
+            top: emailUnderline.bottomAnchor,
+            leading: containerView.leadingAnchor,
+            trailing: containerView.trailingAnchor,
+            padding: UIEdgeInsets(top: 24, left: 24, bottom: 0, right: 24),
+            size: CGSize(width: 0, height: 44)
+        )
+        passwordUnderline.anchor(
+            top: passwordField.bottomAnchor,
+            leading: passwordField.leadingAnchor,
+            trailing: passwordField.trailingAnchor,
+            size: CGSize(width: 0, height: 2)
+        )
+        loginButton.anchor(
+            top: passwordUnderline.bottomAnchor,
+            leading: containerView.leadingAnchor,
+            trailing: containerView.trailingAnchor,
+            padding: UIEdgeInsets(top: 80, left: 24, bottom: 0, right: 24),
+            size: CGSize(width: 0, height: 48)
+        )
+        forgotButton.anchor(
+            top: loginButton.bottomAnchor,
+            centerX: containerView.centerXAnchor,
+            padding: UIEdgeInsets(top: 16, left: 0, bottom: 0, right: 0),
+            size: CGSize(width: 0, height: 28)
+        )
+        facebookImageView.anchor(
+            top: forgotButton.bottomAnchor,
+            trailing: containerView.centerXAnchor,
+            padding: UIEdgeInsets(top: 24, left: 0, bottom: 0, right: 8),
+            size: CGSize(width: 140, height: 40)
+        )
+        twitterImageView.anchor(
+            top: forgotButton.bottomAnchor,
+            leading: containerView.centerXAnchor,
+            padding: UIEdgeInsets(top: 24, left: 8, bottom: 0, right: 0),
+            size: CGSize(width: 140, height: 40)
+        )
     }
     private func setupActions() {
         loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
@@ -191,7 +181,8 @@ class LoginViewController: UIViewController {
     }
     private func bindViewModel() {
         viewModel.onLoginSuccess = { [weak self] in
-            // Ana ekrana geçiş burada olacak (Coordinator ile yönetilecek)
+            // Yönlendirme artık coordinator üzerinden
+            self?.coordinator?.showMainTabBar()
         }
         viewModel.onLoginError = { [weak self] error in
             self?.showAlert(title: NSLocalizedString("Error", comment: ""), message: error)

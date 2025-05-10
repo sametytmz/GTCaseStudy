@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, LoginCoordinator {
 
     var window: UIWindow?
 
@@ -21,9 +21,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let _ = SessionCache.shared.get(forKey: "token") as String? {
             window?.rootViewController = MainTabBarController()
         } else {
-            window?.rootViewController = LoginViewController()
+            let loginVC = LoginViewController()
+            loginVC.coordinator = self
+            window?.rootViewController = loginVC
         }
         window?.makeKeyAndVisible()
+    }
+
+    // LoginCoordinator fonksiyonu
+    func showMainTabBar() {
+        window?.rootViewController = MainTabBarController()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

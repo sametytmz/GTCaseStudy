@@ -93,20 +93,22 @@ class DiscoverCardCell: UICollectionViewCell {
     }
     private func setupUI() {
         contentView.addSubview(mainStack)
-        mainStack.addArrangedSubview(imageView)
-        mainStack.addArrangedSubview(titleLabel)
-        mainStack.addArrangedSubview(priceLabel)
-        mainStack.addArrangedSubview(oldPriceRowStack)
-        mainStack.addArrangedSubview(ratingStack)
-        oldPriceRowStack.addArrangedSubview(oldPriceLabel)
-        oldPriceRowStack.addArrangedSubview(discountLabel)
-        NSLayoutConstraint.activate([
-            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            mainStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            mainStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor)
-        ])
+        mainStack.addArrangedSubviews(
+            imageView,
+            titleLabel,
+            priceLabel,
+            oldPriceRowStack,
+            ratingStack
+        )
+        oldPriceRowStack.addArrangedSubviews(oldPriceLabel, discountLabel)
+        mainStack.anchor(
+            top: contentView.topAnchor,
+            leading: contentView.leadingAnchor,
+            bottom: contentView.bottomAnchor,
+            trailing: contentView.trailingAnchor,
+            padding: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        )
+        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
     }
     // MARK: - Configure
     func configure(with item: DiscoverItem, section: Int) {

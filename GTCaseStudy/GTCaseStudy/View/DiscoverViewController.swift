@@ -13,42 +13,32 @@ class DiscoverViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout { section, environment in
             switch section {
             case 0:
-                // 2'li grid, ekranı doldurur, kenarlarda 8px boşluk
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .estimated(260))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.96), heightDimension: .estimated(260))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 2)
-                group.interItemSpacing = .fixed(8)
-                let section = NSCollectionLayoutSection(group: group)
-                section.orthogonalScrollingBehavior = .continuous
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 8)
-                return section
+                return NSCollectionLayoutSection.horizontalGrid(
+                    itemFractionalWidth: 0.5,
+                    itemHeight: 260,
+                    groupFractionalWidth: 0.96,
+                    interItemSpacing: 8,
+                    contentInsets: NSDirectionalEdgeInsets(top: 16, leading: 8, bottom: 16, trailing: 8)
+                )
             case 1:
-                // 3'lü grid, ekranı doldurur, kenarlarda 8px boşluk
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0/3.0), heightDimension: .estimated(200))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.96), heightDimension: .estimated(200))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 3)
-                group.interItemSpacing = .fixed(8)
-                let section = NSCollectionLayoutSection(group: group)
-                section.orthogonalScrollingBehavior = .continuous
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 16, trailing: 8)
-                section.interGroupSpacing = 8
-                return section
+                return NSCollectionLayoutSection.horizontalGrid(
+                    itemFractionalWidth: 1.0/3.0,
+                    itemHeight: 200,
+                    groupFractionalWidth: 0.96,
+                    interItemSpacing: 8,
+                    contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 16, trailing: 8),
+                    orthogonalScrolling: .continuous,
+                    interGroupSpacing: 8
+                )
             default:
-                // 2'li grid, vertical scroll, kenarlarda 8px boşluk, DİNAMİK yükseklik
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .estimated(320))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(320))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 2)
-                group.interItemSpacing = .fixed(8)
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 16, trailing: 8)
-                section.interGroupSpacing = 8
-                return section
+                return NSCollectionLayoutSection.verticalGrid(
+                    itemFractionalWidth: 0.5,
+                    itemHeight: 320,
+                    groupFractionalWidth: 1.0,
+                    interItemSpacing: 8,
+                    contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 16, trailing: 8),
+                    interGroupSpacing: 8
+                )
             }
         }
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -87,12 +77,12 @@ class DiscoverViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        collectionView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            leading: view.leadingAnchor,
+            bottom: view.bottomAnchor,
+            trailing: view.trailingAnchor
+        )
     }
     private func bindViewModel() {
         viewModel.onDataUpdate = { [weak self] in

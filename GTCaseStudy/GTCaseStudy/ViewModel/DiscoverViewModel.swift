@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import FirebaseAnalytics
+import FirebaseCrashlytics
+import FirebaseRemoteConfig
 
 final class DiscoverViewModel {
     // MARK: - Properties
@@ -23,11 +26,15 @@ final class DiscoverViewModel {
     var secondList: [DiscoverItem] = []
     var twoColumnList: [DiscoverItem] = []
     
+    private let firebase: IFirebaseService
+    
     // MARK: - Init
     init(networkService: NetworkServiceProtocol = NetworkManager.shared,
-         cache: SessionCache = .shared) {
+         cache: SessionCache = .shared,
+         firebase: IFirebaseService = FirebaseService.shared) {
         self.networkService = networkService
         self.cache = cache
+        self.firebase = firebase
     }
     
     // MARK: - Data Fetch
@@ -93,6 +100,21 @@ final class DiscoverViewModel {
                     }
                 }
             }
+        }
+    }
+
+    func userTappedItem(_ item: DiscoverItem) {
+        firebase.logEvent("discover_item_tap", parameters: ["item_id": item.description ?? ""])
+    }
+
+    func handleError(_ error: Error) {
+        firebase.logError(error, userInfo: ["screen": "Discover"])
+    }
+
+    func fetchWelcomeText(completion: @escaping (String?) -> Void) {
+        firebase.fetchRemoteConfig { success in
+            let welcome = self.firebase.getRemoteConfigValue(forKey: "welcome_text")
+            completion(welcome)
         }
     }
 } 

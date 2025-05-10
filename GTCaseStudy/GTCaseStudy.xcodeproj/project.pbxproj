@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D1413F232DCFA1AF00221C8A /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D1413F222DCFA1AF00221C8A /* FirebaseAnalytics */; };
+		D1413F252DCFA1AF00221C8A /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = D1413F242DCFA1AF00221C8A /* FirebaseCore */; };
+		D1413F272DCFA1AF00221C8A /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = D1413F262DCFA1AF00221C8A /* FirebaseCrashlytics */; };
+		D1413F292DCFA1AF00221C8A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = D1413F282DCFA1AF00221C8A /* FirebaseMessaging */; };
+		D1413F2B2DCFA1AF00221C8A /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = D1413F2A2DCFA1AF00221C8A /* FirebaseRemoteConfig */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D187AAFB2DCE0E0800435E06 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +73,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1413F292DCFA1AF00221C8A /* FirebaseMessaging in Frameworks */,
+				D1413F272DCFA1AF00221C8A /* FirebaseCrashlytics in Frameworks */,
+				D1413F252DCFA1AF00221C8A /* FirebaseCore in Frameworks */,
+				D1413F232DCFA1AF00221C8A /* FirebaseAnalytics in Frameworks */,
+				D1413F2B2DCFA1AF00221C8A /* FirebaseRemoteConfig in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +138,11 @@
 			);
 			name = GTCaseStudy;
 			packageProductDependencies = (
+				D1413F222DCFA1AF00221C8A /* FirebaseAnalytics */,
+				D1413F242DCFA1AF00221C8A /* FirebaseCore */,
+				D1413F262DCFA1AF00221C8A /* FirebaseCrashlytics */,
+				D1413F282DCFA1AF00221C8A /* FirebaseMessaging */,
+				D1413F2A2DCFA1AF00221C8A /* FirebaseRemoteConfig */,
 			);
 			productName = GTCaseStudy;
 			productReference = D187AAE42DCE0E0600435E06 /* GTCaseStudy.app */;
@@ -209,6 +227,9 @@
 			);
 			mainGroup = D187AADB2DCE0E0600435E06;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D1413F212DCFA1AF00221C8A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D187AAE52DCE0E0600435E06 /* Products */;
 			projectDirPath = "";
@@ -564,6 +585,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D1413F212DCFA1AF00221C8A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.12.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D1413F222DCFA1AF00221C8A /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1413F212DCFA1AF00221C8A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		D1413F242DCFA1AF00221C8A /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1413F212DCFA1AF00221C8A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		D1413F262DCFA1AF00221C8A /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1413F212DCFA1AF00221C8A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		D1413F282DCFA1AF00221C8A /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1413F212DCFA1AF00221C8A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		D1413F2A2DCFA1AF00221C8A /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1413F212DCFA1AF00221C8A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D187AADC2DCE0E0600435E06 /* Project object */;
 }

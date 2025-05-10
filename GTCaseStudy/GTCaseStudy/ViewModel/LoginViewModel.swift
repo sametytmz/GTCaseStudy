@@ -7,6 +7,8 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
+import FirebaseCrashlytics
 
 final class LoginViewModel {
     // MARK: - Properties
@@ -15,12 +17,15 @@ final class LoginViewModel {
     
     private let networkService: NetworkServiceProtocol
     private let cache: SessionCache
+    private let firebase: IFirebaseService
     
     // MARK: - Init
     init(networkService: NetworkServiceProtocol = NetworkManager.shared,
-         cache: SessionCache = .shared) {
+         cache: SessionCache = .shared,
+         firebase: IFirebaseService = FirebaseService.shared) {
         self.networkService = networkService
         self.cache = cache
+        self.firebase = firebase
     }
     
     // MARK: - Login
@@ -38,13 +43,11 @@ final class LoginViewModel {
                 switch result {
                 case .success(let response):
                     self?.cache.set(object: response.token, forKey: "token")
-                    // Ana ekrana geçiş
-                    if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate, let window = sceneDelegate.window {
-                        window.rootViewController = MainTabBarController()
-                    }
                     self?.onLoginSuccess?()
+                    self?.firebase.logEvent("login_success", parameters: ["method": "email"])
                 case .failure(let error):
                     self?.onLoginError?(error.localizedDescription)
+                    self?.handleError(error)
                 }
             }
         }
@@ -53,5 +56,9 @@ final class LoginViewModel {
     // MARK: - Token
     func getToken() -> String? {
         return cache.get(forKey: "token")
+    }
+    
+    func handleError(_ error: Error) {
+        firebase.logError(error, userInfo: ["screen": "Login"])
     }
 } 
