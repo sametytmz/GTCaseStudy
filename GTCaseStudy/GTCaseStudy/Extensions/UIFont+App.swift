@@ -8,19 +8,29 @@
 import UIKit
 
 extension UIFont {
-    static func appTitleFont() -> UIFont {
-        return UIFont.systemFont(ofSize: 32, weight: .bold)
+    // Figma Typography
+    static func appButton() -> UIFont {
+        return UIFont.systemFont(ofSize: 14, weight: .medium)
     }
-    static func appTextFieldFont() -> UIFont {
-        return UIFont.systemFont(ofSize: 18, weight: .regular)
+    static func appBody2Medium() -> UIFont {
+        return UIFont.systemFont(ofSize: 14, weight: .medium)
     }
-    static func appButtonFont() -> UIFont {
-        return UIFont.systemFont(ofSize: 18, weight: .semibold)
+    static func appSubheading() -> UIFont {
+        return UIFont.systemFont(ofSize: 16, weight: .regular)
     }
-    static func appSocialButtonFont() -> UIFont {
-        return UIFont.systemFont(ofSize: 16, weight: .semibold)
+    static func appTitleMedium() -> UIFont {
+        return UIFont.systemFont(ofSize: 20, weight: .medium)
     }
-    static func appForgotFont() -> UIFont {
-        return UIFont.systemFont(ofSize: 10, weight: .regular)
+    static func appHeadline() -> UIFont {
+        return UIFont.systemFont(ofSize: 24, weight: .regular)
+    }
+    static func appCapsXS() -> UIFont {
+        return UIFont.systemFont(ofSize: 10, weight: .medium)
+    }
+    static func appCaption() -> UIFont {
+        return UIFont.systemFont(ofSize: 12, weight: .regular)
+    }
+    static func appBody1() -> UIFont {
+        return UIFont.systemFont(ofSize: 14, weight: .regular)
     }
 } 

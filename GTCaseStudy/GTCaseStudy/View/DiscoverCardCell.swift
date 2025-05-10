@@ -21,7 +21,7 @@ class DiscoverCardCell: UICollectionViewCell {
     }()
     private let titleLabel: UILabel = {
         let l = UILabel()
-        l.font = .systemFont(ofSize: 16, weight: .semibold)
+        l.font = UIFont.appSubheading()
         l.textColor = .appDark
         l.numberOfLines = 2
         l.lineBreakMode = .byTruncatingTail
@@ -32,14 +32,14 @@ class DiscoverCardCell: UICollectionViewCell {
     }()
     private let priceLabel: UILabel = {
         let l = UILabel()
-        l.font = .systemFont(ofSize: 16, weight: .bold)
+        l.font = UIFont.appBody2Medium()
         l.textColor = .appDark
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
     private let oldPriceLabel: UILabel = {
         let l = UILabel()
-        l.font = .systemFont(ofSize: 14, weight: .regular)
+        l.font = UIFont.appCaption()
         l.textColor = .appGray
         l.attributedText = nil
         l.translatesAutoresizingMaskIntoConstraints = false
@@ -47,7 +47,7 @@ class DiscoverCardCell: UICollectionViewCell {
     }()
     private let discountLabel: UILabel = {
         let l = UILabel()
-        l.font = .systemFont(ofSize: 14, weight: .regular)
+        l.font = UIFont.appCaption()
         l.textColor = UIColor.systemPink
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
@@ -92,30 +92,26 @@ class DiscoverCardCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     private func setupUI() {
-        contentView.addSubview(imageView)
-        contentView.addSubview(titleLabel)
         contentView.addSubview(mainStack)
+        mainStack.addArrangedSubview(imageView)
+        mainStack.addArrangedSubview(titleLabel)
         mainStack.addArrangedSubview(priceLabel)
         mainStack.addArrangedSubview(oldPriceRowStack)
         mainStack.addArrangedSubview(ratingStack)
         oldPriceRowStack.addArrangedSubview(oldPriceLabel)
         oldPriceRowStack.addArrangedSubview(discountLabel)
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            mainStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             mainStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             mainStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor)
         ])
     }
     // MARK: - Configure
-    func configure(with item: DiscoverItem) {
+    func configure(with item: DiscoverItem, section: Int) {
+        let hasDiscount = (item.discount != nil && !(item.discount?.isEmpty ?? true))
+        applyFonts(for: section, hasDiscount: hasDiscount)
         titleLabel.text = item.description
         if let price = item.price {
             priceLabel.text = String(format: "%.2f %@", price.value, price.currency)
@@ -162,6 +158,34 @@ class DiscoverCardCell: UICollectionViewCell {
             }
         } else {
             imageView.image = UIImage(named: "placeholder")
+        }
+    }
+    private func applyFonts(for section: Int, hasDiscount: Bool) {
+        if section == 1 {
+            // 2. grid (3'lü)
+            titleLabel.font = .appCaption()
+            priceLabel.font = .appBody2Medium()
+            oldPriceLabel.font = .appCaption()
+            discountLabel.font = .appCaption()
+        } else if section == 2 {
+            // 3. grid (2'li, vertical)
+            if hasDiscount {
+                titleLabel.font = .appSubheading()
+                priceLabel.font = .appBody2Medium()
+                oldPriceLabel.font = .appCaption()
+                discountLabel.font = .appCaption()
+            } else {
+                titleLabel.font = .appBody1()
+                priceLabel.font = .appTitleMedium()
+                oldPriceLabel.font = .appCaption()
+                discountLabel.font = .appCaption()
+            }
+        } else {
+            // 1. grid (2'li, horizontal)
+            titleLabel.font = .appSubheading()
+            priceLabel.font = .appBody2Medium()
+            oldPriceLabel.font = .appCaption()
+            discountLabel.font = .appCaption()
         }
     }
     private func setRating(_ rating: Double) {

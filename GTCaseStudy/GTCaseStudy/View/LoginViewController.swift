@@ -23,7 +23,7 @@ class LoginViewController: UIViewController {
     private let titleLabel: UILabel = {
         let l = UILabel()
         l.text = NSLocalizedString("Garanti BBVA\nCase Study", comment: "")
-        l.font = .appTitleFont()
+        l.font = .appHeadline()
         l.textColor = .appBlue
         l.numberOfLines = 2
         l.textAlignment = .center
@@ -33,7 +33,7 @@ class LoginViewController: UIViewController {
     private let emailField: UITextField = {
         let tf = UITextField()
         tf.placeholder = NSLocalizedString("E-mail address", comment: "")
-        tf.font = .appTextFieldFont()
+        tf.font = .appSubheading()
         tf.autocapitalizationType = .none
         tf.keyboardType = .emailAddress
         let icon = UIImageView(image: UIImage(named: "emailIcon"))
@@ -53,7 +53,7 @@ class LoginViewController: UIViewController {
     private let passwordField: UITextField = {
         let tf = UITextField()
         tf.placeholder = NSLocalizedString("Password", comment: "")
-        tf.font = .appTextFieldFont()
+        tf.font = .appSubheading()
         tf.isSecureTextEntry = true
         let icon = UIImageView(image: UIImage(named: "lockIcon"))
         icon.contentMode = .scaleAspectFit
@@ -72,7 +72,7 @@ class LoginViewController: UIViewController {
     private let loginButton: UIButton = {
         let b = UIButton(type: .system)
         b.setTitle(NSLocalizedString("LOGIN", comment: ""), for: .normal)
-        b.titleLabel?.font = .appButtonFont()
+        b.titleLabel?.font = .appButton()
         b.setTitleColor(.white, for: .normal)
         b.layer.cornerRadius = 12
         b.clipsToBounds = true
@@ -83,7 +83,7 @@ class LoginViewController: UIViewController {
     private let forgotButton: UIButton = {
         let b = UIButton(type: .system)
         b.setTitle(NSLocalizedString("I FORGOT MY PASS", comment: ""), for: .normal)
-        b.titleLabel?.font = .appForgotFont()
+        b.titleLabel?.font = .appCapsXS()
         b.setTitleColor(.appDark, for: .normal)
         b.layer.cornerRadius = 8
         b.layer.borderWidth = 1
