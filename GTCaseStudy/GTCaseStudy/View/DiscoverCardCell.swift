@@ -60,10 +60,18 @@ class DiscoverCardCell: UICollectionViewCell {
         s.translatesAutoresizingMaskIntoConstraints = false
         return s
     }()
-    private let priceStack: UIStackView = {
+    private let oldPriceRowStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8
+        stack.alignment = .center
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    private let mainStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 2
+        stack.spacing = 4
         stack.alignment = .leading
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -86,11 +94,12 @@ class DiscoverCardCell: UICollectionViewCell {
     private func setupUI() {
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
-        contentView.addSubview(priceStack)
-        contentView.addSubview(ratingStack)
-        priceStack.addArrangedSubview(priceLabel)
-        priceStack.addArrangedSubview(oldPriceLabel)
-        priceStack.addArrangedSubview(discountLabel)
+        contentView.addSubview(mainStack)
+        mainStack.addArrangedSubview(priceLabel)
+        mainStack.addArrangedSubview(oldPriceRowStack)
+        mainStack.addArrangedSubview(ratingStack)
+        oldPriceRowStack.addArrangedSubview(oldPriceLabel)
+        oldPriceRowStack.addArrangedSubview(discountLabel)
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
@@ -99,13 +108,10 @@ class DiscoverCardCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            priceStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            priceStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            priceStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            ratingStack.topAnchor.constraint(equalTo: priceStack.bottomAnchor, constant: 4),
-            ratingStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            ratingStack.heightAnchor.constraint(equalToConstant: 16),
-            ratingStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
+            mainStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            mainStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            mainStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
     }
     // MARK: - Configure
@@ -134,6 +140,7 @@ class DiscoverCardCell: UICollectionViewCell {
         } else {
             discountLabel.isHidden = true
         }
+        oldPriceRowStack.isHidden = oldPriceLabel.isHidden && discountLabel.isHidden
         if let rating = item.ratePercentage {
             setRating(Double(rating) / 20.0)
             ratingStack.isHidden = false
