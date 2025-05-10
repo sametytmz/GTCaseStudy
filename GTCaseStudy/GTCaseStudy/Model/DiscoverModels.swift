@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct Price: Decodable {
+struct Price: Codable {
     let value: Double
     let currency: String
 }
 
-struct DiscoverItem: Decodable {
+struct DiscoverItem: Codable {
     let discount: String?
     let ratePercentage: Int?
     let imageUrl: String?
@@ -21,7 +21,7 @@ struct DiscoverItem: Decodable {
     let oldPrice: Price?
 }
 
-struct DiscoverListResponse: Decodable {
+struct DiscoverListResponse: Codable {
     let list: [DiscoverItem]
 }
 

@@ -16,9 +16,9 @@ final class DiscoverViewModel {
     var onError: ((String) -> Void)?
     
     private let networkService: NetworkServiceProtocol
-    private let cache: SessionCache
+    private let cache: SessionCacheProtocol
     private var token: String? {
-        return SessionCache.shared.get(forKey: "token")
+        return cache.get(forKey: "token")
     }
     
     // Veriler
@@ -30,7 +30,7 @@ final class DiscoverViewModel {
     
     // MARK: - Init
     init(networkService: NetworkServiceProtocol = NetworkManager.shared,
-         cache: SessionCache = .shared,
+         cache: SessionCacheProtocol = SessionCache.shared,
          firebase: IFirebaseService = FirebaseService.shared) {
         self.networkService = networkService
         self.cache = cache

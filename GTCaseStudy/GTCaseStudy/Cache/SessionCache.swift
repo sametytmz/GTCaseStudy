@@ -7,7 +7,13 @@
 
 import Foundation
 
-class SessionCache {
+protocol SessionCacheProtocol {
+    func set<T: Codable>(object: T, forKey key: String)
+    func get<T: Codable>(forKey key: String) -> T?
+    func clear()
+}
+
+class SessionCache: SessionCacheProtocol {
     static let shared = SessionCache()
     private init() {}
     

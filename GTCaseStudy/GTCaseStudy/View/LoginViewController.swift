@@ -15,6 +15,8 @@ protocol LoginCoordinator: AnyObject {
 class LoginViewController: UIViewController {
     // MARK: - Coordinator
     weak var coordinator: LoginCoordinator?
+    // MARK: - ViewModel
+    let viewModel: LoginViewModel
     // MARK: - UI
     private let containerView: UIView = {
         let v = UIView()
@@ -80,8 +82,6 @@ class LoginViewController: UIViewController {
         iv.isUserInteractionEnabled = true
         return iv
     }()
-    // MARK: - ViewModel
-    private let viewModel = LoginViewModel()
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,6 +94,14 @@ class LoginViewController: UIViewController {
         // Başlangıçta ikisi de pasif renk
         emailUnderline.backgroundColor = .appBorder
         passwordUnderline.backgroundColor = .appBorder
+    }
+    // MARK: - Init
+    init(viewModel: LoginViewModel = LoginViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     private func setupUI() {
         view.addSubview(containerView)
@@ -181,7 +189,6 @@ class LoginViewController: UIViewController {
     }
     private func bindViewModel() {
         viewModel.onLoginSuccess = { [weak self] in
-            // Yönlendirme artık coordinator üzerinden
             self?.coordinator?.showMainTabBar()
         }
         viewModel.onLoginError = { [weak self] error in

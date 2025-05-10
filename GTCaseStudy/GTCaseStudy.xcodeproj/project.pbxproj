@@ -61,11 +61,6 @@
 			path = GTCaseStudyTests;
 			sourceTree = "<group>";
 		};
-		D187AB072DCE0E0800435E06 /* GTCaseStudyUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = GTCaseStudyUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +98,6 @@
 			children = (
 				D187AAE62DCE0E0600435E06 /* GTCaseStudy */,
 				D187AAFD2DCE0E0800435E06 /* GTCaseStudyTests */,
-				D187AB072DCE0E0800435E06 /* GTCaseStudyUITests */,
 				D187AAE52DCE0E0600435E06 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -183,9 +177,6 @@
 			);
 			dependencies = (
 				D187AB062DCE0E0800435E06 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				D187AB072DCE0E0800435E06 /* GTCaseStudyUITests */,
 			);
 			name = GTCaseStudyUITests;
 			packageProductDependencies = (

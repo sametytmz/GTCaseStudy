@@ -1,0 +1,20 @@
+{
+  "list": [
+    {
+      "description": "Kitap 1",
+      "price": { "value": 100.0, "currency": "TL" },
+      "oldPrice": { "value": 120.0, "currency": "TL" },
+      "discount": "%20",
+      "ratePercentage": 80,
+      "imageUrl": "https://example.com/image1.jpg"
+    },
+    {
+      "description": "Kitap 2",
+      "price": { "value": 80.0, "currency": "TL" },
+      "oldPrice": null,
+      "discount": null,
+      "ratePercentage": 60,
+      "imageUrl": "https://example.com/image2.jpg"
+    }
+  ]
+} 

@@ -16,12 +16,12 @@ final class LoginViewModel {
     var onLoginError: ((String) -> Void)?
     
     private let networkService: NetworkServiceProtocol
-    private let cache: SessionCache
+    private let cache: SessionCacheProtocol
     private let firebase: IFirebaseService
     
     // MARK: - Init
     init(networkService: NetworkServiceProtocol = NetworkManager.shared,
-         cache: SessionCache = .shared,
+         cache: SessionCacheProtocol = SessionCache.shared,
          firebase: IFirebaseService = FirebaseService.shared) {
         self.networkService = networkService
         self.cache = cache
