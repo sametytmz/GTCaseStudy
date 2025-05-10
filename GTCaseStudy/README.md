@@ -8,9 +8,7 @@
 - [Kurulum ve Çalıştırma](#kurulum-ve-çalıştırma)
 - [Özellikler](#özellikler)
 - [Testler](#testler)
-- [Geliştirme ve İyileştirme Alanları](#geliştirme-ve-iyileştirme-alanları)
-- [Ekran Görüntüleri](#ekran-görüntüleri)
-- [Katkıda Bulunanlar](#katkıda-bulunanlar)
+- [Projeyi Yazan](#projeyi-yazan)
 
 ---
 
@@ -65,7 +63,7 @@ GTCaseStudy/
 ## Kurulum ve Çalıştırma
 
 1. Projeyi klonlayın.
-2. `pod install` veya Swift Package Manager ile bağımlılıkları yükleyin.
+2. Swift Package Manager ile bağımlılıkları yükleyin.
 3. `GoogleService-Info.plist` dosyasını ekleyin.
 4. Xcode ile açıp çalıştırın.
 
@@ -92,17 +90,8 @@ GTCaseStudy/
 
 ---
 
-## Geliştirme ve İyileştirme Alanları
 
-- UI testleri eklenebilir
-- Daha gelişmiş dependency injection (Swinject vb.)
-- Dark mode ve accessibility desteği
-- Ekstra dokümantasyon ve mimari diyagramlar
-- Remote config ve push notification örnekleri artırılabilir
-
----
-
-## Katkıda Bulunanlar
+## Projeyi Yazan
 
 - Samet Yatmaz
 
