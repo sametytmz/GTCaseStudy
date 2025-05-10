@@ -9,6 +9,8 @@
 - [Özellikler](#özellikler)
 - [Testler](#testler)
 - [Projeyi Yazan](#projeyi-yazan)
+- [Mimari Diyagram ve Akış](#mimari-diyagram-ve-akış)
+- [Geliştirme ve İyileştirme Alanları](#geliştirme-ve-iyileştirme-alanları)
 
 ---
 
@@ -64,8 +66,7 @@ GTCaseStudy/
 
 1. Projeyi klonlayın.
 2. Swift Package Manager ile bağımlılıkları yükleyin.
-3. `GoogleService-Info.plist` dosyasını ekleyin.
-4. Xcode ile açıp çalıştırın.
+3. Xcode ile açıp çalıştırın.
 
 ---
 
@@ -90,7 +91,6 @@ GTCaseStudy/
 
 ---
 
-
 ## Projeyi Yazan
 
 - Samet Yatmaz
@@ -101,4 +101,60 @@ GTCaseStudy/
 
 - Proje, mimari temizlik, test edilebilirlik ve sürdürülebilirlik açısından öne çıkacak şekilde hazırlanmıştır.
 - Tüm önemli katmanlar için protokol bazlı, mock ile test edilebilir yapıdadır.
-- Kodun okunabilirliği, tekrar kullanılabilirliği ve bakımı ön planda tutulmuştur. 
+- Kodun okunabilirliği, tekrar kullanılabilirliği ve bakımı ön planda tutulmuştur.
+
+---
+
+## Mimari Diyagram ve Akış
+
+```
++-------------------+
+|      View         |
++-------------------+
+          |
+          v
++-------------------+
+|    ViewModel      |
++-------------------+
+          |
+          v
++-------------------+
+|  Network/Cache    |
++-------------------+
+          |
+          v
++-------------------+
+|     Model         |
++-------------------+
+```
+
+- **View:** UIKit ile programatik olarak oluşturuldu, kullanıcıdan gelen aksiyonları ViewModel'e iletir.
+- **ViewModel:** İş mantığı burada, Network ve Cache katmanları ile konuşur, View'a veri sağlar.
+- **Network/Cache:** API çağrıları ve cache yönetimi burada, protokol tabanlı ve test edilebilir.
+- **Model:** Codable yapılar, API'den gelen veriyi temsil eder.
+
+### Login Akış Şeması
+
+1. Kullanıcı email/şifre girer.
+2. ViewModel, NetworkManager ile `/login` endpoint'ine istek atar.
+3. Başarılıysa token cache'e kaydedilir ve Discover ekranına geçilir.
+4. Hatalıysa View'da hata mesajı gösterilir.
+
+### Örnek API Response
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+---
+
+## Geliştirme ve İyileştirme Alanları
+
+- **Daha Modüler Yapı:**
+    - Özellikle büyük projelerde, her ana ekran (Login, Discover, Profile vs.) ayrı bir modül veya Swift Package olarak ayrılabilir.
+    - Ortak servisler (Network, Cache, Extensions) ayrı bir "Core" modülünde toplanabilir.
+    - Bu sayede bağımsız geliştirme, test ve deployment kolaylaşır.
+    - Takımda paralel geliştirme, build süresi optimizasyonu ve kodun sürdürülebilirliği artar.
+    - Küçük projelerde zorunlu değildir, ancak büyük ölçekli ve kurumsal projelerde profesyonellik göstergesidir. 
