@@ -24,6 +24,9 @@ class DiscoverCardCell: UICollectionViewCell {
         l.font = .systemFont(ofSize: 16, weight: .semibold)
         l.textColor = .appDark
         l.numberOfLines = 2
+        l.lineBreakMode = .byTruncatingTail
+        l.minimumScaleFactor = 0.8
+        l.adjustsFontSizeToFitWidth = true
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
@@ -57,6 +60,14 @@ class DiscoverCardCell: UICollectionViewCell {
         s.translatesAutoresizingMaskIntoConstraints = false
         return s
     }()
+    private let priceStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 2
+        stack.alignment = .leading
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -75,10 +86,11 @@ class DiscoverCardCell: UICollectionViewCell {
     private func setupUI() {
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
-        contentView.addSubview(priceLabel)
-        contentView.addSubview(oldPriceLabel)
-        contentView.addSubview(discountLabel)
+        contentView.addSubview(priceStack)
         contentView.addSubview(ratingStack)
+        priceStack.addArrangedSubview(priceLabel)
+        priceStack.addArrangedSubview(oldPriceLabel)
+        priceStack.addArrangedSubview(discountLabel)
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
@@ -87,14 +99,10 @@ class DiscoverCardCell: UICollectionViewCell {
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            priceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            oldPriceLabel.centerYAnchor.constraint(equalTo: priceLabel.centerYAnchor),
-            oldPriceLabel.leadingAnchor.constraint(equalTo: priceLabel.trailingAnchor, constant: 8),
-            discountLabel.centerYAnchor.constraint(equalTo: priceLabel.centerYAnchor),
-            discountLabel.leadingAnchor.constraint(equalTo: oldPriceLabel.trailingAnchor, constant: 8),
-            discountLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
-            ratingStack.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 4),
+            priceStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            priceStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            priceStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            ratingStack.topAnchor.constraint(equalTo: priceStack.bottomAnchor, constant: 4),
             ratingStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             ratingStack.heightAnchor.constraint(equalToConstant: 16),
             ratingStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
@@ -102,15 +110,16 @@ class DiscoverCardCell: UICollectionViewCell {
     }
     // MARK: - Configure
     func configure(with item: DiscoverItem) {
-        titleLabel.text = item.title
+        titleLabel.text = item.description
         if let price = item.price {
-            priceLabel.text = price
+            priceLabel.text = String(format: "%.2f %@", price.value, price.currency)
             priceLabel.isHidden = false
         } else {
             priceLabel.isHidden = true
         }
         if let oldPrice = item.oldPrice {
-            let attributed = NSAttributedString(string: oldPrice, attributes: [
+            let oldPriceText = String(format: "%.2f %@", oldPrice.value, oldPrice.currency)
+            let attributed = NSAttributedString(string: oldPriceText, attributes: [
                 .strikethroughStyle: NSUnderlineStyle.single.rawValue,
                 .foregroundColor: UIColor.appGray
             ])
@@ -119,21 +128,20 @@ class DiscoverCardCell: UICollectionViewCell {
         } else {
             oldPriceLabel.isHidden = true
         }
-        if let discount = item.discount {
+        if let discount = item.discount, !discount.isEmpty {
             discountLabel.text = discount
             discountLabel.isHidden = false
         } else {
             discountLabel.isHidden = true
         }
-        if let rating = item.rating {
-            setRating(rating)
+        if let rating = item.ratePercentage {
+            setRating(Double(rating) / 20.0)
             ratingStack.isHidden = false
         } else {
             ratingStack.isHidden = true
         }
         // Görsel yükleme (placeholder)
         if let urlString = item.imageUrl, let url = URL(string: urlString) {
-            // Basit bir image loader (gelişmişi için SDWebImage vs. kullanılabilir)
             DispatchQueue.global().async {
                 if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
                     DispatchQueue.main.async {
@@ -151,7 +159,7 @@ class DiscoverCardCell: UICollectionViewCell {
     }
     private func setRating(_ rating: Double) {
         ratingStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        let fullStars = Int(rating)
+        let fullStars = Int(round(rating))
         for i in 0..<5 {
             let imageName = i < fullStars ? "star_filled" : "star_empty"
             let star = UIImageView(image: UIImage(named: imageName))

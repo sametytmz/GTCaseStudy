@@ -36,14 +36,17 @@ class LoginViewController: UIViewController {
         tf.font = .appTextFieldFont()
         tf.autocapitalizationType = .none
         tf.keyboardType = .emailAddress
-        tf.leftView = UIImageView(image: UIImage(named: "emailIcon"))
-        tf.leftViewMode = .always
+        let icon = UIImageView(image: UIImage(named: "emailIcon"))
+        icon.contentMode = .scaleAspectFit
+        icon.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        tf.rightView = icon
+        tf.rightViewMode = .always
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
     private let emailUnderline: UIView = {
         let v = UIView()
-        v.backgroundColor = .appBlue
+        v.backgroundColor = .appBorder
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
@@ -52,8 +55,11 @@ class LoginViewController: UIViewController {
         tf.placeholder = NSLocalizedString("Password", comment: "")
         tf.font = .appTextFieldFont()
         tf.isSecureTextEntry = true
-        tf.leftView = UIImageView(image: UIImage(named: "lockIcon"))
-        tf.leftViewMode = .always
+        let icon = UIImageView(image: UIImage(named: "lockIcon"))
+        icon.contentMode = .scaleAspectFit
+        icon.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        tf.rightView = icon
+        tf.rightViewMode = .always
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -78,32 +84,28 @@ class LoginViewController: UIViewController {
         let b = UIButton(type: .system)
         b.setTitle(NSLocalizedString("I FORGOT MY PASS", comment: ""), for: .normal)
         b.titleLabel?.font = .appForgotFont()
-        b.setTitleColor(.appBlue, for: .normal)
+        b.setTitleColor(.appDark, for: .normal)
         b.layer.cornerRadius = 8
         b.layer.borderWidth = 1
         b.layer.borderColor = UIColor.appBlue.cgColor
         b.translatesAutoresizingMaskIntoConstraints = false
+        b.contentEdgeInsets = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
+        b.heightAnchor.constraint(equalToConstant: 28).isActive = true
         return b
     }()
-    private let facebookButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.setTitleColor(.white, for: .normal)
-        b.titleLabel?.font = .appSocialButtonFont()
-        b.setImage(UIImage(named: "facebookIcon"), for: .normal)
-        b.backgroundColor = .appFacebook
-        b.layer.cornerRadius = 8
-        b.translatesAutoresizingMaskIntoConstraints = false
-        return b
+    private let facebookImageView: UIImageView = {
+        let iv = UIImageView(image: UIImage(named: "facebookIcon"))
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        iv.isUserInteractionEnabled = true
+        return iv
     }()
-    private let twitterButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.setTitleColor(.white, for: .normal)
-        b.titleLabel?.font = .appSocialButtonFont()
-        b.setImage(UIImage(named: "twitterIcon"), for: .normal)
-        b.backgroundColor = .appTwitter
-        b.layer.cornerRadius = 8
-        b.translatesAutoresizingMaskIntoConstraints = false
-        return b
+    private let twitterImageView: UIImageView = {
+        let iv = UIImageView(image: UIImage(named: "twitterIcon"))
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        iv.isUserInteractionEnabled = true
+        return iv
     }()
     // MARK: - ViewModel
     private let viewModel = LoginViewModel()
@@ -114,6 +116,11 @@ class LoginViewController: UIViewController {
         setupUI()
         setupActions()
         bindViewModel()
+        emailField.delegate = self
+        passwordField.delegate = self
+        // Başlangıçta ikisi de pasif renk
+        emailUnderline.backgroundColor = .appBorder
+        passwordUnderline.backgroundColor = .appBorder
     }
     private func setupUI() {
         view.addSubview(containerView)
@@ -124,8 +131,8 @@ class LoginViewController: UIViewController {
         containerView.addSubview(passwordUnderline)
         containerView.addSubview(loginButton)
         containerView.addSubview(forgotButton)
-        containerView.addSubview(facebookButton)
-        containerView.addSubview(twitterButton)
+        containerView.addSubview(facebookImageView)
+        containerView.addSubview(twitterImageView)
         // Layout
         NSLayoutConstraint.activate([
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
@@ -155,31 +162,32 @@ class LoginViewController: UIViewController {
             passwordUnderline.trailingAnchor.constraint(equalTo: passwordField.trailingAnchor),
             passwordUnderline.heightAnchor.constraint(equalToConstant: 2),
             // Login Button
-            loginButton.topAnchor.constraint(equalTo: passwordUnderline.bottomAnchor, constant: 40),
+            loginButton.topAnchor.constraint(equalTo: passwordUnderline.bottomAnchor, constant: 80),
             loginButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
             loginButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
             loginButton.heightAnchor.constraint(equalToConstant: 48),
             // Forgot
-            forgotButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 32),
+            forgotButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 16),
             forgotButton.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            forgotButton.heightAnchor.constraint(equalToConstant: 32),
-            // Facebook
-            facebookButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
-            facebookButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -32),
-            facebookButton.heightAnchor.constraint(equalToConstant: 48),
-            facebookButton.trailingAnchor.constraint(equalTo: containerView.centerXAnchor, constant: -8),
-            // Twitter
-            twitterButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
-            twitterButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -32),
-            twitterButton.heightAnchor.constraint(equalToConstant: 48),
-            twitterButton.leadingAnchor.constraint(equalTo: containerView.centerXAnchor, constant: 8)
+            forgotButton.heightAnchor.constraint(equalToConstant: 28),
+            // Facebook ve Twitter
+            facebookImageView.topAnchor.constraint(equalTo: forgotButton.bottomAnchor, constant: 24),
+            facebookImageView.trailingAnchor.constraint(equalTo: containerView.centerXAnchor, constant: -8),
+            facebookImageView.heightAnchor.constraint(equalToConstant: 40),
+            facebookImageView.widthAnchor.constraint(equalToConstant: 140),
+            twitterImageView.topAnchor.constraint(equalTo: forgotButton.bottomAnchor, constant: 24),
+            twitterImageView.leadingAnchor.constraint(equalTo: containerView.centerXAnchor, constant: 8),
+            twitterImageView.heightAnchor.constraint(equalToConstant: 40),
+            twitterImageView.widthAnchor.constraint(equalToConstant: 140)
         ])
     }
     private func setupActions() {
         loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
         forgotButton.addTarget(self, action: #selector(comingSoonTapped), for: .touchUpInside)
-        facebookButton.addTarget(self, action: #selector(comingSoonTapped), for: .touchUpInside)
-        twitterButton.addTarget(self, action: #selector(comingSoonTapped), for: .touchUpInside)
+        let facebookTap = UITapGestureRecognizer(target: self, action: #selector(comingSoonTapped))
+        facebookImageView.addGestureRecognizer(facebookTap)
+        let twitterTap = UITapGestureRecognizer(target: self, action: #selector(comingSoonTapped))
+        twitterImageView.addGestureRecognizer(twitterTap)
     }
     private func bindViewModel() {
         viewModel.onLoginSuccess = { [weak self] in
@@ -199,5 +207,29 @@ class LoginViewController: UIViewController {
     }
     @objc private func comingSoonTapped() {
         showComingSoonAlert()
+    }
+}
+// MARK: - UITextFieldDelegate
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == emailField {
+            emailUnderline.backgroundColor = .appBlue
+            passwordUnderline.backgroundColor = .appBorder
+        } else if textField == passwordField {
+            passwordUnderline.backgroundColor = .appBlue
+            emailUnderline.backgroundColor = .appBorder
+        }
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if emailField.isFirstResponder {
+            emailUnderline.backgroundColor = .appBlue
+            passwordUnderline.backgroundColor = .appBorder
+        } else if passwordField.isFirstResponder {
+            passwordUnderline.backgroundColor = .appBlue
+            emailUnderline.backgroundColor = .appBorder
+        } else {
+            emailUnderline.backgroundColor = .appBorder
+            passwordUnderline.backgroundColor = .appBorder
+        }
     }
 } 

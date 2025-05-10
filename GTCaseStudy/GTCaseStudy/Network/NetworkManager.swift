@@ -49,6 +49,13 @@ class NetworkManager: NetworkServiceProtocol {
                 completion(.failure(NSError(domain: "No data", code: -2)))
                 return
             }
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []),
+               let prettyData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
+               let prettyString = String(data: prettyData, encoding: .utf8) {
+                print("API Response JSON:\n\(prettyString)")
+            } else {
+                print("API Response (raw): \(String(data: data, encoding: .utf8) ?? "<binary>")")
+            }
             do {
                 let decoded = try JSONDecoder().decode(T.self, from: data)
                 completion(.success(decoded))

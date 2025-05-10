@@ -14,7 +14,9 @@ final class DiscoverViewModel {
     
     private let networkService: NetworkServiceProtocol
     private let cache: SessionCache
-    private let token: String?
+    private var token: String? {
+        return SessionCache.shared.get(forKey: "token")
+    }
     
     // Veriler
     var firstList: [DiscoverItem] = []
@@ -23,11 +25,9 @@ final class DiscoverViewModel {
     
     // MARK: - Init
     init(networkService: NetworkServiceProtocol = NetworkManager.shared,
-         cache: SessionCache = .shared,
-         token: String? = SessionCache.shared.get(forKey: "token")) {
+         cache: SessionCache = .shared) {
         self.networkService = networkService
         self.cache = cache
-        self.token = token
     }
     
     // MARK: - Data Fetch
@@ -78,12 +78,12 @@ final class DiscoverViewModel {
             completion(cached, nil)
             return
         }
-        networkService.request(endpoint: endpoint.path, method: "GET", parameters: nil, headers: headers) { [weak self] (result: Result<DiscoverFirstHorizontalListResponse, Error>) in
+        networkService.request(endpoint: endpoint.path, method: "GET", parameters: nil, headers: headers) { [weak self] (result: Result<DiscoverListResponse, Error>) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):
-                    self?.cache.set(object: response.items, forKey: cacheKey)
-                    completion(response.items, nil)
+                    self?.cache.set(object: response.list, forKey: cacheKey)
+                    completion(response.list, nil)
                 case .failure(let error):
                     // Offline ise cache'den dene
                     if let cached: [DiscoverItem] = self?.cache.get(forKey: cacheKey), !cached.isEmpty {

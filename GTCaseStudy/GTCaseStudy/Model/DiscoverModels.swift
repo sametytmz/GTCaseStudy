@@ -7,15 +7,22 @@
 
 import Foundation
 
+struct Price: Decodable {
+    let value: Double
+    let currency: String
+}
+
 struct DiscoverItem: Decodable {
-    let id: Int
-    let title: String
+    let discount: String?
+    let ratePercentage: Int?
     let imageUrl: String?
     let description: String?
-    let price: String?
-    let oldPrice: String?
-    let discount: String?
-    let rating: Double?
+    let price: Price?
+    let oldPrice: Price?
+}
+
+struct DiscoverListResponse: Decodable {
+    let list: [DiscoverItem]
 }
 
 struct DiscoverFirstHorizontalListResponse: Decodable {

@@ -21,6 +21,6 @@ extension UIFont {
         return UIFont.systemFont(ofSize: 16, weight: .semibold)
     }
     static func appForgotFont() -> UIFont {
-        return UIFont.systemFont(ofSize: 14, weight: .regular)
+        return UIFont.systemFont(ofSize: 10, weight: .regular)
     }
 } 
